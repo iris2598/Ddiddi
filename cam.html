@@ -30,34 +30,39 @@
         <p class="colChild" id="subTitle">웹캠을 응시하며 촬영버튼을 눌러주세요</p>
         <div id="camera">
             <video id="video"></video>
-            <button id="capture-btn">촬영</button>
         </div>
+        <button id="capture-btn">촬영</button>
         <canvas id="canvas"></canvas>
         <script>
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const captureButton = document.getElementById('capture-btn');
-
-            // Access the user's camera and stream the video
             navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
+                const video = document.getElementById('video');
+                const canvas = document.getElementById('canvas');
+                const captureButton = document.getElementById('capture-btn');
+
                 video.srcObject = stream;
                 video.play();
+
+                captureButton.addEventListener('click', () => {
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const imageData = canvas.toDataURL('image/png');
+                const image = new Image();
+                image.src = imageData;
+
+                image.onload = () => {
+                    const printWindow = window.open('', '_blank');
+                    printWindow.document.open();
+                    printWindow.document.write('<html><head><title>Print</title></head><body>');
+                    printWindow.document.write('<img src="' + image.src + '" style="max-width: 100%;" />');
+                    printWindow.document.write('</body></html>');
+                    printWindow.document.close();
+                    printWindow.print();
+                };
+                });
             })
             .catch((error) => {
                 console.log('Error accessing the camera:', error);
-            });
-
-            // Capture photo when the button is clicked
-            captureButton.addEventListener('click', () => {
-            // Draw the current frame of the video onto the canvas
-            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // Get the image data from the canvas as a base64-encoded URL
-            const imageData = canvas.toDataURL('image/png');
-
-            // Display the captured photo in a new window or tab
-            window.open(imageData);
             });
         </script>
     </div>
