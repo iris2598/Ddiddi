@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>띠띠갤러리</title>
+    <style>
+        @font-face {
+            font-family: 'Nanum HaNaSonGeurSsi';
+            font-style: normal;
+            font-weight: 400;
+            src: url('나눔손글씨 하나손글씨.ttf');
+        }
+        * {font-family: 'Nanum HaNaSonGeurSsi';}
+        html {background-color: rgba(234, 225, 217, 1); display: flex;}
+        body {max-width: 1300px; margin: 0 auto;}
+        .colParent {display: flex; flex-direction: column; justify-content: center; align-items: center;}
+        .imgParent {height: 700px; margin-top: -30px;}
+        .title {display: flex; flex-direction: row; justify-content: center; align-items: center; height: 150px; margin-top: -50px; margin-bottom: 40px; transform: rotate(3deg);}
+        #mainDdi {width: 1045px; transform: rotate(2.4deg);}
+        #ddiDdi {width: 354px;}
+        #adTitle {font-size: 90pt; margin-left: 20pt; margin-top: 70pt; color: rgba(22, 50, 32, 1);}
+        #toCam {border: none; font-size: 40pt; color: rgba(67,63,44,1); background-color: rgba(234, 225, 217, 1);}
+        #shortLine {width: 280px; margin-top: 3px;}
+    </style>
+</head>
+<body>
+    <div class="colParent">
+        <div class="imgParent">
+            <img src="사진.png" class="colChild" id="mainDdi" alt="exImage">
+        </div>
+        <div class="title">
+            <img src="띠띠.png" class="colChild" id="ddiDdi" alt="exImage">
+            <p id="adTitle">랑 사진찍기</p>
+        </div>
+        <button type="button" class="colChild" id="toCam" onclick="location.href='edit.html'">사진 찍으러 가기</button>
+        <img src="line/shortLine.png" class="colChild" id="shortLine" alt="shortLine">
+    </div>
+</body>
+</html>

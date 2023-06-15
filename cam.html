@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>띠띠갤러리</title>
+    <style>
+        @font-face {
+            font-family: 'Nanum HaNaSonGeurSsi';
+            font-style: normal;
+            font-weight: 400;
+            src: url('나눔손글씨 하나손글씨.ttf');
+        }
+        * {font-family: 'Nanum HaNaSonGeurSsi';}
+        html {background-color: rgba(234, 225, 217, 1); display: flex;}
+        body {max-width: 1300px; margin: 0 auto;}
+        .colParent {display: flex; flex-direction: column; justify-content: center; align-items: center;}
+        .picBox {width: 1254px; height: 702px; margin-top: 25px;}
+        #bigTitle {font-size: 35pt; color: rgba(67,63,44,1); margin-top: 40px; margin-bottom: 0;}
+        #subTitle {font-size: 20pt; color: rgba(67,63,44,1); float: right; margin-top: 10px; margin-bottom: 0;}
+        #counting {z-index: 5; font-size: 130pt; color: white; text-align: center;}
+        #frame {z-index: 4; width: 1254px; height: 702px;}
+        #cameraSeneor {z-index: 1; width: 1254px; height: 702px;}
+        #cameraView {z-index: 2; width: 1254px; height: 702px;}
+        #output {z-index: 3; width: 1254px; height: 702px;}
+    </style>
+    <script>
+        let constraints = { video: { facingMode: "user"}, audio: false};
+        const cameraView = document.querySelector("#cameraView");
+        const cameraOutput = document.querySelector("#output");
+        const cameraSensor = document.querySelector("#cameraSensor");
+        var a = 1;
+
+        var interval = setInterval(function(){
+            count = Number(document.getElementById("counting").value);
+            count -= 1;
+            },1000);
+
+        function counting(){
+            setTimeout(function(){clearTimeout(interval)},5000);
+            // 반짝 혹은 찰칵
+        }
+        function photo(){
+            counting(); // 5초 지나면서 초 카운팅하다 없애기
+            cameraSensor.width = cameraView.videoWidth;
+            cameraSensor.height = cameraView.videoHeight;
+            cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
+            cameraOutput.src = cameraSensor.toDataURL("image/webp"); // 촬영
+            localStorage.setItem(`ver${a}`, cameraOutput.src); // 촬영본(촬영한거랑 프레임이랑 같이) 저장
+            a += 1;
+        }
+        function cameraStart(){
+            navigator.mediaDevices.getUserMedia(constraints)
+            .then(function(stream){
+                track = stream.getTracks()[0];
+                cameraView.srcObject = stream;
+            })
+            .catch(function(error){
+                console.error("camera not found", error);
+            })
+
+            const frame = localStorage.getItem('frameImg');
+            document.getElementById("frame").src = frame;
+
+            photo();
+            document.getElementById("subTitle").value = "촬영 기회 ( 2 / 2 )"; // subTitle 변경
+            photo();
+        }
+        window.addEventListener("load", cameraStart, false);
+    </script>
+</head>
+<body>
+    <div class="colParent">
+        <p id="bigTitle">함께 띠띠사진 찍어볼까요?</p>
+        <p id="subTitle">촬영 기회 ( 1 / 2 )</p>
+        <div class="picBox">
+            <p id="counting">5</p>
+            <img src="example.png" id="frame" alt="frame">
+            <canvas id="cameraSensor"></canvas>
+            <video id="cameraView" autoplay playsinline></video>
+            <img src="//:0" alt="output" id="output">
+        </div>
+    </div>
+</body>
+</html>
