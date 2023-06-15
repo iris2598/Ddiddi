@@ -32,6 +32,7 @@
             <video id="video"></video>
         </div>
         <button id="capture-btn">촬영</button>
+        <button id="print-btn">이대로 인화하기</button>
         <canvas id="canvas"></canvas>
         <script>
             navigator.mediaDevices.getUserMedia({ video: true })
@@ -39,26 +40,33 @@
                 const video = document.getElementById('video');
                 const canvas = document.getElementById('canvas');
                 const captureButton = document.getElementById('capture-btn');
+                const printButton = document.getElementById('print-btn');
 
                 video.srcObject = stream;
                 video.play();
 
+                let capturedImage;
+
                 captureButton.addEventListener('click', () => {
                 canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                capturedImage = canvas.toDataURL('image/png');
+                // Display the captured image
+                const capturedImageView = document.getElementById('captured-image');
+                capturedImageView.src = capturedImage;
+                });
+                captureButton.innerHTML = "다시 찍기"
 
-                const imageData = canvas.toDataURL('image/png');
-                const image = new Image();
-                image.src = imageData;
-
-                image.onload = () => {
+                printButton.addEventListener('click', () => {
+                if (capturedImage) {
                     const printWindow = window.open('', '_blank');
                     printWindow.document.open();
                     printWindow.document.write('<html><head><title>Print</title></head><body>');
-                    printWindow.document.write('<img src="' + image.src + '" style="max-width: 100%;" />');
+                    printWindow.document.write('<img src="' + capturedImage + '" style="max-width: 100%;" />');
                     printWindow.document.write('</body></html>');
                     printWindow.document.close();
                     printWindow.print();
-                };
+                    printWindow.close();
+                }
                 });
             })
             .catch((error) => {
