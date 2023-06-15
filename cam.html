@@ -25,62 +25,42 @@
         #cameraView {z-index: 2; width: 1254px; height: 702px;}
         #output {z-index: 3; width: 1254px; height: 702px;}
     </style>
-    <script>
-        let constraints = { video: { facingMode: "user"}, audio: false};
-        const cameraView = document.querySelector("#cameraView");
-        const cameraOutput = document.querySelector("#output");
-        const cameraSensor = document.querySelector("#cameraSensor");
-        var a = 1;
-
-        var interval = setInterval(function(){
-            count = Number(document.getElementById("counting").value);
-            count -= 1;
-            },1000);
-
-        function counting(){
-            setTimeout(function(){clearTimeout(interval)},5000);
-            // 반짝 혹은 찰칵
-        }
-        function photo(){
-            counting(); // 5초 지나면서 초 카운팅하다 없애기
-            cameraSensor.width = cameraView.videoWidth;
-            cameraSensor.height = cameraView.videoHeight;
-            cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
-            cameraOutput.src = cameraSensor.toDataURL("image/webp"); // 촬영
-            localStorage.setItem(`ver${a}`, cameraOutput.src); // 촬영본(촬영한거랑 프레임이랑 같이) 저장
-            a += 1;
-        }
-        function cameraStart(){
-            navigator.mediaDevices.getUserMedia(constraints)
-            .then(function(stream){
-                track = stream.getTracks()[0];
-                cameraView.srcObject = stream;
-            })
-            .catch(function(error){
-                console.error("camera not found", error);
-            })
-
-            const frame = localStorage.getItem('frameImg');
-            document.getElementById("frame").src = frame;
-
-            photo();
-            document.getElementById("subTitle").value = "촬영 기회 ( 2 / 2 )"; // subTitle 변경
-            photo();
-        }
-        window.addEventListener("load", cameraStart, false);
-    </script>
 </head>
 <body>
     <div class="colParent">
         <p id="bigTitle">함께 띠띠사진 찍어볼까요?</p>
-        <p id="subTitle">촬영 기회 ( 1 / 2 )</p>
-        <div class="picBox">
-            <p id="counting">5</p>
-            <img src="example.png" id="frame" alt="frame">
-            <canvas id="cameraSensor"></canvas>
-            <video id="cameraView" autoplay playsinline></video>
-            <img src="//:0" alt="output" id="output">
+        <div id="camera">
+            <video id="video"></video>
+            <button id="capture-btn">촬영</button>
         </div>
+        <canvas id="canvas"></canvas>
+        <script>
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const captureButton = document.getElementById('capture-btn');
+
+            // Access the user's camera and stream the video
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch((error) => {
+                console.log('Error accessing the camera:', error);
+            });
+
+            // Capture photo when the button is clicked
+            captureButton.addEventListener('click', () => {
+            // Draw the current frame of the video onto the canvas
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Get the image data from the canvas as a base64-encoded URL
+            const imageData = canvas.toDataURL('image/png');
+
+            // Display the captured photo in a new window or tab
+            window.open(imageData);
+            });
+        </script>
     </div>
 </body>
 </html>
