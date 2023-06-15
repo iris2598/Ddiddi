@@ -66,6 +66,9 @@
             <p class="colChild" id="subTitle">함께 사진 찍어야 하니 찍을 공간을 반드시 비워주세요.</p>
             <div class="colChild" id="canvasDiv">
                 <div id="canvas">
+                    <div id="canvasContent">
+
+                    </div>
                 </div>
             </div>
             <div class="rowBtn">
@@ -79,7 +82,8 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script defer>
         const canvasdiv = document.getElementById("canvaDiv");
-        const canvas = document.getElementById("canvas");
+        const canvass = document.getElementById("canvas");
+        const cancon = document.getElementById("canvasContent");
         const resetBtn = document.getElementById("resetBtn");
         const saveBtn = document.getElementById("saveBtn");
         var count = 1;
@@ -120,7 +124,7 @@
             img.src = imgSrc;
             img.style.width = "100%";
 
-            canvas.appendChild(imgWrapper);
+            cancon.appendChild(imgWrapper);
             imgWrapper.appendChild(delBtn);
             imgWrapper.appendChild(rotBtn);
             imgWrapper.appendChild(img);
@@ -232,18 +236,29 @@
 
         // canvasdiv.addEventListener('mousedown', moveContainer);
         
-        resetBtn.addEventListener("click", () => {canvas.innerHTML = "";})
-        saveBtn.addEventListener("click", location.href='cam.html')
+        resetBtn.addEventListener("click", () => {cancon.innerHTML = "";})
+        
+        function captureDivContent() {
+            html2canvas(cancon, {
+                allowTaint: true,
+                foreignObjectRendering: true
+            }).then((canvas) => {
+                const imageData = canvas.toDataURL('image/png');
+
+                // Append the image data as a query parameter to the next page URL
+                const nextPageUrl = 'cam.html';
+                const nextPageWithImage = nextPageUrl + '?image=' + encodeURIComponent(imageData);
+
+                // Navigate to the next page
+                window.location.href = nextPageWithImage;
+                })
+                .catch((error) => {
+                console.log('Error capturing div content:', error);
+                });
+            }
+        saveBtn.addEventListener('click', captureDivContent);
 
 
-        function saveData() {
-            html2canvas(canvas).then(canvas => {
-                const frame = canvas.toDataURL("img/png")
-            })
-            localStorage.setItem('frameImg', frame);
-            print('do')
-            location.href='cam.html'
-        }
     </script>
 
 </body>

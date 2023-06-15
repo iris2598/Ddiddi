@@ -15,26 +15,42 @@
         * {font-family: 'Hana_handwriting';}
         html {background-color: rgba(234, 225, 217, 1); display: flex;}
         body {max-width: 1300px; margin: 0 auto;}
+        .rowParent {display: flex; flex-direction: row; justify-content: center; align-items: center;}
         .colParent {display: flex; flex-direction: column; justify-content: center; align-items: center;}
         .picBox {width: 1254px; height: 702px; margin-top: 25px;}
+        .btn {position: relative; top: 1180px; width: 150px; font-size: 18pt; color: white; border: none; border-radius: 50px; margin: 5px; padding: 6px 18px 12px 18px; background-color: rgba(144,153,143,1);}
         #bigTitle {font-size: 35pt; color: rgba(67,63,44,1); margin-top: 40px; margin-bottom: 0;}
         #subTitle {font-size: 20pt; color: rgba(67,63,44,1); float: right; margin-top: 10px; margin-bottom: 0;}
-        #video {width: 1950px; transform: rotateY(180deg); -webkit-tranform:rotateY(180deg);}
-        #frame {z-index: 4; width: 1254px; height: 702px;}
-        #output {z-index: 3; width: 1254px; height: 702px;}
+        #camera {position: relative; top: 600px;}
+        #video {position: absolute; z-index: 3; height: 1100px; transform: rotateY(180deg); margin-top: 20px; margin-bottom: 20px;}
+        #frame {position: absolute; z-index: 4; width: 1300px; height: 1100px;}
+        #canvas {display: none; position: absolute; z-index: 3; transform: rotateY(180deg); width: 900px; height: 650px; left:300px;}
+        #print-btn {visibility: hidden;}
     </style>
 </head>
 <body>
     <div class="colParent">
         <p class="colChild" id="bigTitle">함께 띠띠사진 찍어볼까요?</p>
         <p class="colChild" id="subTitle">웹캠을 응시하며 촬영버튼을 눌러주세요</p>
-        <div id="camera">
+        <div class= "rowParent" id="camera">
+            <img src="" id="frame"/>
             <video id="video"></video>
+            <canvas id="canvas"></canvas>
         </div>
-        <button id="capture-btn">촬영</button>
-        <button id="print-btn">이대로 인화하기</button>
-        <canvas id="canvas"></canvas>
+        <div class= "rowParent">
+            <button class="btn" id="capture-btn">촬영하기</button>
+            <button class="btn" id="print-btn">인화하기</button>
+        </div>
+    </div>
         <script>
+            const searchParams = new URLSearchParams(window.location.search);
+            console.log(searchParams);
+            const imageData = searchParams.get('image');
+
+            // Set the image data as the source of an <img> element
+            const imageElement = document.getElementById('frame');
+            imageElement.src = imageData;
+
             navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 const video = document.getElementById('video');
@@ -48,32 +64,31 @@
                 let capturedImage;
 
                 captureButton.addEventListener('click', () => {
-                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                capturedImage = canvas.toDataURL('image/png');
-                // Display the captured image
-                const capturedImageView = document.getElementById('captured-image');
-                capturedImageView.src = capturedImage;
+                    video.style.right = "-270px"
+                    imageElement.style.right = "-270px"
+                    canvas.style.display = "block"
+                    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                    capturedImage = canvas.toDataURL('image/png');
+                    captureButton.innerHTML = "재촬영하기";
+                    printButton.style.visibility = "visible";
                 });
-                captureButton.innerHTML = "다시 찍기"
 
                 printButton.addEventListener('click', () => {
-                    if (capturedImage) {
-                        const printWindow = window.open('', '', prtOption);
-                        printWindow.document.open();
-                        printWindow.document.write(capturedImage);
-                        printWindow.document.close();
-                        printWindow.focus();
-                        printWindow.print();
-                        printWindow.close();
-                        printWindow.focus();
-                        printWindow.print();
-                    }
+                    const printWindow = window.open(capturedImage);
+                    printWindow.document.open();
+                    printWindow.document.write('<html><head><title>Print</title></head><body>');
+                    printWindow.document.write('<img src="' + capturedImage + '" style="transform: rotate(90deg) rotateY(180deg); width: 100%; height: 100%;"/>');
+                    printWindow.document.write('</body></html>');
+                    printWindow.document.close();
+                    printWindow.onload = () => {
+                    printWindow.print();
+                    printWindow.close();
+                    };
                 });
             })
             .catch((error) => {
                 console.log('Error accessing the camera:', error);
             });
         </script>
-    </div>
 </body>
 </html>
