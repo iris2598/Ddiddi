@@ -19,16 +19,15 @@
         .picBox {width: 1254px; height: 702px; margin-top: 25px;}
         #bigTitle {font-size: 35pt; color: rgba(67,63,44,1); margin-top: 40px; margin-bottom: 0;}
         #subTitle {font-size: 20pt; color: rgba(67,63,44,1); float: right; margin-top: 10px; margin-bottom: 0;}
-        #counting {z-index: 5; font-size: 130pt; color: white; text-align: center;}
+        #video {width: 1950px; transform: rotateY(180deg); -webkit-tranform:rotateY(180deg);}
         #frame {z-index: 4; width: 1254px; height: 702px;}
-        #cameraSeneor {z-index: 1; width: 1254px; height: 702px;}
-        #cameraView {z-index: 2; width: 1254px; height: 702px;}
         #output {z-index: 3; width: 1254px; height: 702px;}
     </style>
 </head>
 <body>
     <div class="colParent">
-        <p id="bigTitle">함께 띠띠사진 찍어볼까요?</p>
+        <p class="colChild" id="bigTitle">함께 띠띠사진 찍어볼까요?</p>
+        <p class="colChild" id="subTitle">웹캠을 응시하며 촬영버튼을 눌러주세요</p>
         <div id="camera">
             <video id="video"></video>
             <button id="capture-btn">촬영</button>
