@@ -66,6 +66,7 @@
             <p class="colChild" id="subTitle">함께 사진 찍어야 하니 찍을 공간을 반드시 비워주세요.</p>
             <div class="colChild" id="canvasDiv">
                 <div id="canvas">
+                    <a id="target" style="display:none"></a>
                     <div id="canvasContent">
 
                     </div>
@@ -244,13 +245,14 @@
                 foreignObjectRendering: true
             }).then((canvas) => {
                 const imageData = canvas.toDataURL('image/png');
+                console.log(imageData)
 
                 // Append the image data as a query parameter to the next page URL
                 const nextPageUrl = 'cam.html';
                 const nextPageWithImage = nextPageUrl + '?image=' + encodeURIComponent(imageData);
-
+                console.log(imageData);
                 // Navigate to the next page
-                window.location.href = nextPageWithImage;
+                //window.location.href = nextPageWithImage;
                 })
                 .catch((error) => {
                 console.log('Error capturing div content:', error);
