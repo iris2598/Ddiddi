@@ -1,84 +1,4 @@
-<!DOCTYPE html>
-<html lang="kr">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>띠띠갤러리</title>
-    <style>
-        @font-face {
-            font-family: 'Hana_handwriting';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/naverfont_05@1.0/Hana_handwriting.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-        * {font-family: 'Hana_handwriting';}
-        html {background-color: rgba(234, 225, 217, 1); display: flex;}
-        body {max-width: 1300px; margin: 0 auto;}
-        .rowParent {display: flex; flex-direction: row; justify-content: center; align-items: center;}
-        .colParent {display: flex; flex-direction: column; justify-content: center; align-items: center;}
-        .btn {float: right; width: 110px; font-size: 18pt; color: white; border: none; border-radius: 50px; margin: 5px; padding: 6px 18px 12px 18px; background-color: rgba(144,153,143,1);}
-        .items {overflow-y: hidden; height:720px;}
-        .charBox {width: 130px; height: 130px; border: 3px solid rgba(170,206,135,1); border-radius: 20px;
-            padding: 10px; margin: 27px 0px 27px 0px;
-            display: flex; flex-direction: row; justify-content: center; align-items: center;}
-        #personbox {margin-top: 0px;}
-        #person {width: 70px;}
-        #rock {width: 120px; margin-right: 10px;}
-        #plant {width: 75px;}
-        #mushroom {width: 100px;}
-        #book {width: 110px;}
-        #cat {width: 88px;}
-        #child {width: 90px;}
-        #fish {width: 120px;}
-        #itemList {width: 160px; padding-top: 48px; padding-right: 100px;}
-        #upBtn {width: 40px; margin-bottom: 30px;}
-        #downBtn {width: 40px; margin-top: 20px;}
-        #canvas {position: relative; width:1045px; height:585px; overflow: hidden; border: 2px solid rgba(93,133,105,1); background-color: white; box-shadow: inset 0px 0px 10px rgba(0,0,0,0.4); margin-top: 30px; margin-bottom: 30px;}
-        #bigTitle {font-size: 35pt; color: rgba(67,63,44,1); margin-top: 60px; margin-bottom: 0;}
-        #subTitle {font-size: 25pt; color: rgba(67,63,44,1); margin-top: 10px; margin-bottom: 0;}
-        #reSign {width: 20px; margin-right: 10px; translate: 0% 13%;}
-        #saveSign {width: 20px; margin-right: 10px; translate: 0% 13%;}
-    </style>
-</head>
-<body>
-    <div class="rowParent">
-        <div class="colParent" id="itemList">
-            <a href="#personbox">
-                <img src="button/upBtn.png" id="upBtn" alt="upBtn">
-            </a>
-            <div class="items">
-                <div class="charBox" id="personbox" onclick="imgClick(person.src)"><img src="character/사람.png" id="person" alt="person"></div>
-                <div class="charBox" onclick="imgClick(rock.src)"><img src="character/돌.png" id="rock" alt="rock"></div>
-                <div class="charBox" onclick="imgClick(plant.src)"><img src="character/식물.png" id="plant" alt="plant"></div>
-                <div class="charBox" onclick="imgClick(mushroom.src)"><img src="character/버섯.png" id="mushroom" alt="mushroom"></div>
-                <div class="charBox" id="bookbox" onclick="imgClick(book.src)"><img src="character/책.png" id="book" alt="book"></div>
-                <div class="charBox" onclick="imgClick(cat.src)"><img src="character/고양이.png" id="cat" alt="cat"></div>
-                <div class="charBox" onclick="imgClick(child.src)"><img src="character/아이.png" id="child" alt="child"></div>
-                <div class="charBox" onclick="imgClick(fish.src)"><img src="character/물고기.png" id="fish" alt="fish"></div>
-            </div>
-            <a href="#bookbox">
-                <img src="button/downBtn.png" id="downBtn" alt="downBtn">
-            </a>
-        </div>
-        <div class="colParent">
-            <p class="colChild" id="bigTitle">원하는 띠띠를 선택해 띠띠사진 프레임을 만들어주세요.</p>
-            <p class="colChild" id="subTitle">함께 사진 찍어야 하니 찍을 공간을 반드시 비워주세요.</p>
-            <div class="colChild" id="canvasDiv">
-                <div id="canvas">
-                </div>
-            </div>
-            <div class="rowBtn">
-                <button type="button" class="btn" id="saveBtn"><img src="button/saveSign.png" id="saveSign">저장</button>
-                <button type="button" class="btn" id="resetBtn"><img src="button/reSignW.png" id="reSign">초기화</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script defer>
-        const canvasdiv = document.getElementById("canvaDiv");
+const canvasdiv = document.getElementById("canvaDiv");
         const canvas = document.getElementById("canvas");
         const resetBtn = document.getElementById("resetBtn");
         const saveBtn = document.getElementById("saveBtn");
@@ -232,9 +152,9 @@
 
         // canvasdiv.addEventListener('mousedown', moveContainer);
         
+        import html2canvas from './node_modules/html2canvas'
         resetBtn.addEventListener("click", () => {canvas.innerHTML = "";})
-        saveBtn.addEventListener("click", location.href='cam.html')
-
+        saveBtn.addEventListener("click", saveData);
 
         function saveData() {
             html2canvas(canvas).then(canvas => {
@@ -244,7 +164,3 @@
             print('do')
             location.href='cam.html'
         }
-    </script>
-
-</body>
-</html>
