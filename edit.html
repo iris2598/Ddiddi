@@ -18,23 +18,23 @@
         .rowParent {display: flex; flex-direction: row; justify-content: center; align-items: center;}
         .colParent {display: flex; flex-direction: column; justify-content: center; align-items: center;}
         .btn {float: right; width: 110px; font-size: 18pt; color: white; border: none; border-radius: 50px; margin: 5px; padding: 6px 18px 12px 18px; background-color: rgba(144,153,143,1);}
-        .items {overflow-y: hidden; height:720px;}
-        .charBox {width: 130px; height: 130px; border: 3px solid rgba(170,206,135,1); border-radius: 20px;
-            padding: 10px; margin: 27px 0px 27px 0px;
+        .items {overflow-y: hidden; height:1100px;}
+        .charBox {width: 220px; height: 220px; border: 3px solid rgba(170,206,135,1); border-radius: 20px;
+            padding: 10px; margin: 30px 0px 30px 0px;
             display: flex; flex-direction: row; justify-content: center; align-items: center;}
         #personbox {margin-top: 0px;}
-        #person {width: 70px;}
-        #rock {width: 120px; margin-right: 10px;}
-        #plant {width: 75px;}
-        #mushroom {width: 100px;}
-        #book {width: 110px;}
-        #cat {width: 88px;}
-        #child {width: 90px;}
-        #fish {width: 120px;}
-        #itemList {width: 160px; padding-top: 48px; padding-right: 100px;}
-        #upBtn {width: 40px; margin-bottom: 30px;}
-        #downBtn {width: 40px; margin-top: 20px;}
-        #canvas {position: relative; width:1045px; height:585px; overflow: hidden; border: 2px solid rgba(93,133,105,1); background-color: white; box-shadow: inset 0px 0px 10px rgba(0,0,0,0.4); margin-top: 30px; margin-bottom: 30px;}
+        #person {width: 110px;}
+        #rock {width: 180px; margin-right: 10px;}
+        #plant {width: 110px;}
+        #mushroom {width: 150px;}
+        #book {width: 150px;}
+        #cat {width: 130px;}
+        #child {width: 135px;}
+        #fish {width: 165px;}
+        #itemList {width: 190px; padding-top: 48px; padding-right: 100px;}
+        #upBtn {width: 60px; margin-bottom: 30px;}
+        #downBtn {width: 60px; margin-top: 20px;}
+        #canvas {position: relative; width:1800px; height: 1000px; overflow: hidden; border: 2px solid rgba(93,133,105,1); background-color: white; box-shadow: inset 0px 0px 10px rgba(0,0,0,0.4); margin-top: 30px; margin-bottom: 30px;}
         #bigTitle {font-size: 35pt; color: rgba(67,63,44,1); margin-top: 60px; margin-bottom: 0;}
         #subTitle {font-size: 25pt; color: rgba(67,63,44,1); margin-top: 10px; margin-bottom: 0;}
         #reSign {width: 20px; margin-right: 10px; translate: 0% 13%;}
@@ -66,7 +66,6 @@
             <p class="colChild" id="subTitle">함께 사진 찍어야 하니 찍을 공간을 반드시 비워주세요.</p>
             <div class="colChild" id="canvasDiv">
                 <div id="canvas">
-                    <a id="target" style="display:none"></a>
                     <div id="canvasContent">
 
                     </div>
@@ -114,7 +113,7 @@
             delBtn.style.backgroundSize = "contain"
             rotBtn.style.position = "relative"
             rotBtn.style.top = "-35px";
-            rotBtn.style.right = "-165px";
+            rotBtn.style.right = "-315px";
             rotBtn.style.width = "40px";
             rotBtn.style.height = "40px";
             rotBtn.style.rotate = "220deg"
@@ -238,21 +237,22 @@
         // canvasdiv.addEventListener('mousedown', moveContainer);
         
         resetBtn.addEventListener("click", () => {cancon.innerHTML = "";})
-        
+
         function captureDivContent() {
             html2canvas(cancon, {
                 allowTaint: true,
                 foreignObjectRendering: true
             }).then((canvas) => {
-                const imageData = canvas.toDataURL('image/png');
-                console.log(imageData)
+                var link = document.createElement('a');
+                var imageData = canvas.toDataURL();
+                link.href = imageData;
+                link.download = 'frame.png';
+                document.body.appendChild(link);
+                link.click();
+                
+                document.body.removeChild(link);
 
-                // Append the image data as a query parameter to the next page URL
-                const nextPageUrl = 'cam.html';
-                const nextPageWithImage = nextPageUrl + '?image=' + encodeURIComponent(imageData);
-                console.log(imageData);
-                // Navigate to the next page
-                //window.location.href = nextPageWithImage;
+                window.location.href = 'cam.html';
                 })
                 .catch((error) => {
                 console.log('Error capturing div content:', error);

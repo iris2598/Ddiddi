@@ -18,12 +18,15 @@
         .rowParent {display: flex; flex-direction: row; justify-content: center; align-items: center;}
         .colParent {display: flex; flex-direction: column; justify-content: center; align-items: center;}
         .picBox {width: 1254px; height: 702px; margin-top: 25px;}
-        .btn {position: relative; top: 1180px; width: 150px; font-size: 18pt; color: white; border: none; border-radius: 50px; margin: 5px; padding: 6px 18px 12px 18px; background-color: rgba(144,153,143,1);}
-        #bigTitle {font-size: 35pt; color: rgba(67,63,44,1); margin-top: 40px; margin-bottom: 0;}
-        #subTitle {font-size: 20pt; color: rgba(67,63,44,1); float: right; margin-top: 10px; margin-bottom: 0;}
+        .btn {position: relative; top: 1050px; width: 300px; font-size: 30pt; color: white; border: none; border-radius: 50px; margin: 5px; padding: 6px 18px 12px 18px; background-color: rgba(144,153,143,1);}
+        #bigTitle {font-size: 60pt; color: rgba(67,63,44,1); margin-top: 40px; margin-bottom: 0;}
+        #subTitle {font-size: 35pt; color: rgba(67,63,44,1); float: right; margin-top: 10px; margin-bottom: 0;}
         #camera {position: relative; top: 600px;}
-        #video {position: absolute; z-index: 3; height: 1100px; transform: rotateY(180deg); margin-top: 20px; margin-bottom: 20px;}
-        #frame {position: absolute; z-index: 4; width: 1300px; height: 1100px;}
+        #one {position: absolute; top:-570px; left: -700px;}
+        #two {position: absolute; top:-400px; left: -70px;}
+        #video {position: absolute; z-index: 3; height: 950px; width: 1265px; transform: rotateY(180deg); margin-top: 20px; margin-bottom: 20px;}
+        #frame {position: absolute; z-index: 4; width: 1265px; height: 970px;}
+        #frame2 {display: none; position: absolute; z-index: 4; width: 900px; height: 650px; left:300px;}
         #canvas {display: none; position: absolute; z-index: 3; transform: rotateY(180deg); width: 900px; height: 650px; left:300px;}
         #print-btn {visibility: hidden;}
     </style>
@@ -31,32 +34,35 @@
 <body>
     <div class="colParent">
         <p class="colChild" id="bigTitle">함께 띠띠사진 찍어볼까요?</p>
-        <p class="colChild" id="subTitle">웹캠을 응시하며 촬영버튼을 눌러주세요</p>
+        <p class="colChild" id="subTitle">띠띠와 어떤 순간을 남기고 싶나요?</p>
         <div class= "rowParent" id="camera">
-            <img src="" id="frame"/>
-            <video id="video"></video>
-            <canvas id="canvas"></canvas>
+            <div id="one">
+                <img src="frame/1.png" id="frame"/>
+                <video id="video"></video>
+            </div>
+            <div id="two">
+                <img src="frame/1.png" id="frame2"/>
+                <canvas id="canvas"></canvas>
+            </div>
         </div>
         <div class= "rowParent">
+            <button class="btn" id="frame-btn">배경 바꾸기</button>
             <button class="btn" id="capture-btn">촬영하기</button>
             <button class="btn" id="print-btn">인화하기</button>
         </div>
     </div>
         <script>
-            const url = new URL(window.location.href);
-            const imageData = url.searchParams.get('image');
-            console.log(url)
-
             // Set the image data as the source of an <img> element
-            const imageElement = document.getElementById('frame');
-            imageElement.src = imageData;
 
             navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
                 const video = document.getElementById('video');
                 const canvas = document.getElementById('canvas');
+                const frame = document.getElementById('frame');
+                const finframe = document.getElementById('frame2');
                 const captureButton = document.getElementById('capture-btn');
                 const printButton = document.getElementById('print-btn');
+                const frameButton = document.getElementById('frame-btn');
 
                 video.srcObject = stream;
                 video.play();
@@ -64,8 +70,10 @@
                 let capturedImage;
 
                 captureButton.addEventListener('click', () => {
-                    video.style.right = "-270px"
-                    imageElement.style.right = "-270px"
+                    video.style.right = "-850px"
+                    frame.style.right = "-850px"
+                    finframe.src = frame.src
+                    finframe.style.display = "block"
                     canvas.style.display = "block"
                     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
                     capturedImage = canvas.toDataURL('image/png');
@@ -76,8 +84,8 @@
                 printButton.addEventListener('click', () => {
                     const printWindow = window.open(capturedImage);
                     printWindow.document.open();
-                    printWindow.document.write('<html><head><title>Print</title></head><body>');
-                    printWindow.document.write('<img src="' + capturedImage + '" style="transform: rotateY(180deg); width: 100%; height: 100%;"/>');
+                    printWindow.document.write('<html><head><title>Print</title></head><body style="position: relative;>');
+                    printWindow.document.write('<img src="'+ finframe.src +'" style="position: absolute; z-index: 4; width: 100%; height: 100%;"/><img src="' + capturedImage + '" style="position: absolute; z-index: 3; transform: rotateY(180deg); width: 100%; height: 100%;"/>');
                     printWindow.document.write('</body></html>');
                     printWindow.document.close();
                     printWindow.onload = () => {
@@ -85,9 +93,15 @@
                     printWindow.close();
                     };
                 });
-            })
-            .catch((error) => {
-                console.log('Error accessing the camera:', error);
+                
+                frameButton.addEventListener('click', () =>{
+                    const random = Math.floor(Math.random()*6)+1
+                    frame.src = `frame/${random}.png`
+                })
+
+                })
+                .catch((error) => {
+                    console.log('Error accessing the camera:', error);
             });
         </script>
 </body>
