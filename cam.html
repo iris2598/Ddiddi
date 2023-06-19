@@ -25,10 +25,10 @@
         #one {position: absolute; top:-570px; left: -700px;}
         #two {position: absolute; top:-400px; left: -70px;}
         #video {position: absolute; z-index: 3; height: 950px; width: 1265px; transform: rotateY(180deg); margin-top: 20px; margin-bottom: 20px;}
-        #frame {position: absolute; z-index: 4; width: 1265px; height: 970px;}
+        #frame {position: absolute; z-index: 4; width: 1265px; height: 950px; margin-top: 20px; margin-bottom: 20px;}
         #frame2 {display: none; position: absolute; z-index: 4; width: 900px; height: 650px; left:300px;}
         #canvas {display: none; position: absolute; z-index: 3; transform: rotateY(180deg); width: 900px; height: 650px; left:300px;}
-        #print-btn {visibility: hidden;}
+        #print-btn {display: none;}
     </style>
 </head>
 <body>
@@ -64,6 +64,8 @@
                 const printButton = document.getElementById('print-btn');
                 const frameButton = document.getElementById('frame-btn');
 
+                const randomNum = 0;
+
                 video.srcObject = stream;
                 video.play();
 
@@ -73,30 +75,55 @@
                     video.style.right = "-850px"
                     frame.style.right = "-850px"
                     finframe.src = frame.src
+                    const fin = finframe.src
                     finframe.style.display = "block"
                     canvas.style.display = "block"
                     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
                     capturedImage = canvas.toDataURL('image/png');
                     captureButton.innerHTML = "재촬영하기";
-                    printButton.style.visibility = "visible";
+                    printButton.style.display = "block";
                 });
 
                 printButton.addEventListener('click', () => {
-                    const printWindow = window.open(capturedImage);
-                    printWindow.document.open();
-                    printWindow.document.write('<html><head><title>Print</title></head><body style="position: relative;>');
-                    printWindow.document.write('<img src="'+ finframe.src +'" style="position: absolute; z-index: 4; width: 100%; height: 100%;"/><img src="' + capturedImage + '" style="position: absolute; z-index: 3; transform: rotateY(180deg); width: 100%; height: 100%;"/>');
-                    printWindow.document.write('</body></html>');
-                    printWindow.document.close();
-                    printWindow.onload = () => {
-                    printWindow.print();
-                    printWindow.close();
-                    };
+                    window.onbeforeprint = function(){
+                        
+                        document.getElementById("one").remove();
+                        document.getElementById("bigTitle").remove();
+                        document.getElementById("subTitle").remove();
+                        canvas.style.width = "2000px";
+                        canvas.style.height = "1500px";
+                        canvas.style.left = "-300px";
+                        finframe.style.width = "2000px";
+                        finframe.style.height = "1500px";
+
+                        document.getElementsByClassName("btn").style.display = "none";
+
+                        // canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                        // capturedImage = canvas.toDataURL('image/png');
+                        // console.log(document.body.innerHTML);
+                    }
+                    // window.onafterprint = function(){
+                    //     document.body,innerHTML = initBody;
+                    // }
+                    window.print();
+                    // console.log(finframe.src)
+                    // const printWindow = window.open(capturedImage);
+                    // printWindow.document.open();
+                    // printWindow.document.write('<!DOCTYPE html><html lang="kr"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Print</title></head><body style="position: relative;>');
+                    // printWindow.document.write('<img id="frame" src="frame/'+ randomNum +'.png" style="position: absolute; z-index: 999; width: 100%; height: 100%;"/>');
+                    // printWindow.document.write('<img id="image" src="' + capturedImage + '" style="position: absolute; z-index: 2; transform: rotateY(180deg); width: 100%; height: 100%;"/>');
+                    // printWindow.document.write('</body></html>');
+                    // printWindow.document.close();
+                    // printWindow.onload = () => {
+                    //     printWindow.print();
+                    //     printWindow.close();
+                    // };
+                    //window.location.href = 'index.html';
                 });
                 
                 frameButton.addEventListener('click', () =>{
-                    const random = Math.floor(Math.random()*6)+1
-                    frame.src = `frame/${random}.png`
+                    randomNum = Math.floor(Math.random()*6)+1
+                    frame.src = `frame/${randomNum}.png`
                 })
 
                 })
